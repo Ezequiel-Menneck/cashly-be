@@ -1,0 +1,9 @@
+type Mutation {
+    createUser(createUserRequest: CreateUserRequestDTO!): User
+    updateUsername(identifier: String!, username: String!): Boolean
+    deleteUserByIdentifier(identifier: String!): Boolean
+    updateUserBaseSalary(identifier: String!, baseSalary: Float!): User
+    createTransaction(createTransactionDTO: CreateTransactionDTO!): Transactions
+    deleteTransaction(identifier: String!, transactionId: String!): Boolean
+    updateTransaction(updateTransactionDTO: UpdateTransactionDTO!): Boolean
+}

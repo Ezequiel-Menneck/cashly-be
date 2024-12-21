@@ -1,0 +1,18 @@
+services:
+
+  mongo:
+    image: mongo
+    container_name: cashly-mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: casdly
+      MONGO_INITDB_ROOT_PASSWORD: cashly@123
+    volumes:
+      - mongodb:/data/db
+
+volumes:
+  mongodb:
+    driver: local
+    name: mongo-data

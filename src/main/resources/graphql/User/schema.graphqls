@@ -1,0 +1,38 @@
+type User {
+    id: String!,
+    identifier: String!,
+    username: String!,
+    baseSalary: Float,
+    transactions: [Transactions]
+}
+
+type Transactions {
+    id: String!,
+    amount: Float!,
+    transactionDate: String!,
+    description: String!,
+    type: String!
+}
+
+input CreateUserRequestDTO {
+    username: String!,
+    identifier: String!,
+    baseSalary: Float!
+}
+
+input CreateTransactionDTO {
+    identifier: String!,
+    transactionDate: String!
+    amount: Float!,
+    description: String!,
+    type: String!
+}
+
+input UpdateTransactionDTO {
+    transactionId: String!
+    identifier: String!,
+    amount: Float,
+    description: String,
+    type: String
+}
+

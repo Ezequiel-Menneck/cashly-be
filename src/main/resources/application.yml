@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: Cashly
+  graphql:
+    graphiql:
+      enabled: true
+
+  data:
+    mongodb:
+      uri: mongodb://casdly:cashly%40123@localhost:27017/
+      password: cashly@123
+      database: cashly
