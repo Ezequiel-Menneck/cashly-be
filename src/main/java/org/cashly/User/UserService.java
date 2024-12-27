@@ -1,13 +1,19 @@
 package org.cashly.User;
 
+import org.cashly.Category.Category;
+import org.cashly.Category.CategoryRepository;
+import org.cashly.Category.CategoryService;
 import org.cashly.User.DTOs.CreateUserRequestDTO;
+import org.cashly.User.DTOs.UserDTO;
 import org.cashly.User.Exceptions.DuplicateUserException;
 import org.cashly.User.Exceptions.UserErrorCodeException;
 import org.cashly.User.Exceptions.UserNotFoundException;
 import org.cashly.User.Transactions.DTOs.CreateTransactionDTO;
+import org.cashly.User.Transactions.DTOs.TransactionsDTO;
 import org.cashly.User.Transactions.DTOs.UpdateTransactionDTO;
 import org.cashly.User.Transactions.TransactionMapper;
 import org.cashly.User.Transactions.Transactions;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -18,11 +24,15 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
     private final UserMapper userMapper;
     private final TransactionMapper transactionMapper;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper, TransactionMapper transactionMapper) {
+    public UserService(UserRepository userRepository, CategoryRepository categoryRepository, CategoryService categoryService, UserMapper userMapper, TransactionMapper transactionMapper) {
         this.userRepository = userRepository;
+        this.categoryRepository = categoryRepository;
+        this.categoryService = categoryService;
         this.userMapper = userMapper;
         this.transactionMapper = transactionMapper;
     }
@@ -37,8 +47,26 @@ public class UserService {
         return newUser;
     }
 
-    public User getUserByIdentifier(String identifier) {
-        return getUser(identifier);
+    public UserDTO getUserByIdentifier(String identifier) {
+        Optional<User> optionalUser = userRepository.findByIdentifier(identifier);
+        if (optionalUser.isEmpty()) {
+            throw new UserNotFoundException(identifier, UserErrorCodeException.USER_NOT_FOUND.name());
+        }
+        User user = optionalUser.get();
+        List<TransactionsDTO> transactionsDTO = user.getTransactions().stream()
+                .map(transaction -> {
+                    TransactionsDTO dto = new TransactionsDTO();
+                    BeanUtils.copyProperties(transaction, dto);
+
+                    if (transaction.getCategoryId() != null) {
+                        categoryRepository.findById(transaction.getCategoryId()).ifPresent(category -> dto.setCategoryName(category.getName()));
+                    }
+
+                    return dto;
+                }).toList();
+
+        return userMapper.toUserDTO(user, transactionsDTO);
+
     }
 
     public void deleteUserByIdentifier(String identifier) {
@@ -61,7 +89,10 @@ public class UserService {
 
     public Transactions createTransaction(CreateTransactionDTO createTransactionDTO) {
         User user = getUser(createTransactionDTO.identifier());
-        Transactions transactions = transactionMapper.toEntity(createTransactionDTO);
+        Optional<Category> optionalCategory = categoryService.findByName(createTransactionDTO.categoryName());
+
+        // optionalCategory is always present
+        Transactions transactions = transactionMapper.toEntity(createTransactionDTO, optionalCategory.get().getId());
         user.getTransactions().add(transactions);
         userRepository.save(user);
         return transactions;
@@ -76,15 +107,23 @@ public class UserService {
 
     public Boolean updateTransaction(UpdateTransactionDTO updateTransactionDTO) {
         User user = getUser(updateTransactionDTO.identifier());
+        Optional<Category> optionalCategory = getCategoryIfExists(updateTransactionDTO.categoryName());
+
         List<Transactions> transactionsList = user.getTransactions();
-        transactionsList.stream().filter(t -> t.getId().equals(updateTransactionDTO.transactionId())).findFirst().ifPresent(t -> {
-            t.setAmount(updateTransactionDTO.amount() != null ? updateTransactionDTO.amount() : t.getAmount());
-            t.setDescription(updateTransactionDTO.description() != null ? updateTransactionDTO.description() : t.getDescription());
-            t.setType(updateTransactionDTO.type() != null ? updateTransactionDTO.type() : t.getType());
-            t.setTransactionDate(updateTransactionDTO.transactionDate() != null ? updateTransactionDTO.transactionDate().toString() : t.getTransactionDate());
-        });
+        transactionsList.stream()
+                .filter(t -> t.getId().equals(updateTransactionDTO.transactionId()))
+                .findFirst()
+                .ifPresent(t -> updateTransactionFields(updateTransactionDTO, t, optionalCategory));
         userRepository.save(user);
         return true;
+    }
+
+    private static void updateTransactionFields(UpdateTransactionDTO updateTransactionDTO, Transactions transaction, Optional<Category> optionalCategory) {
+        transaction.setAmount(updateTransactionDTO.amount() != null ? updateTransactionDTO.amount() : transaction.getAmount());
+        transaction.setDescription(updateTransactionDTO.description() != null ? updateTransactionDTO.description() : transaction.getDescription());
+        transaction.setType(updateTransactionDTO.type() != null ? updateTransactionDTO.type() : transaction.getType());
+        transaction.setTransactionDate(updateTransactionDTO.transactionDate() != null ? updateTransactionDTO.transactionDate().toString() : transaction.getTransactionDate());
+        optionalCategory.ifPresent(category -> transaction.setCategoryId(category.getId()));
     }
 
     private User getUser(String identifier) {
@@ -93,6 +132,12 @@ public class UserService {
             throw new UserNotFoundException(identifier, UserErrorCodeException.USER_NOT_FOUND.name());
         }
         return optionalUser.get();
+    }
+
+    private Optional<Category> getCategoryIfExists(String categoryName) {
+        return categoryName != null && !categoryName.isBlank()
+                ? categoryService.findByName(categoryName)
+                : Optional.empty();
     }
 
 }

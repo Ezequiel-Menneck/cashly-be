@@ -1,0 +1,5 @@
+extend type Mutation {
+    createCategory(name: String!): Category
+    updateCategory(updateCategoryDTO: UpdateCategoryDTO!): Category
+    deleteCategoryById(id: String!): Boolean
+}

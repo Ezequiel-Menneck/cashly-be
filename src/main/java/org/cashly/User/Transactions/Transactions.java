@@ -16,4 +16,6 @@ public class Transactions {
     private String description;
 
     private TransactionType type;
+
+    private String categoryId;
 }

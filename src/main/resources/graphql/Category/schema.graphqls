@@ -1,0 +1,9 @@
+type Category {
+    id: String!,
+    name: String!
+}
+
+input UpdateCategoryDTO {
+    oldName: String!,
+    newName: String!
+}

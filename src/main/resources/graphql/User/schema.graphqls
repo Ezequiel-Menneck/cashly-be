@@ -12,6 +12,26 @@ type Transactions {
     transactionDate: String!,
     description: String!,
     type: String!
+    categoryId: String
+}
+
+type UserDTO {
+    id: String!,
+    identifier: String!,
+    username: String!,
+    baseSalary: Float,
+    transactions: [TransactionsDTO]
+}
+
+type TransactionsDTO {
+    id: String!,
+    amount: Float!,
+    transactionDate: String!,
+    description: String!,
+    type: String!
+    categoryId: String
+    categoryName: String
+
 }
 
 input CreateUserRequestDTO {
@@ -26,6 +46,7 @@ input CreateTransactionDTO {
     amount: Float!,
     description: String!,
     type: String!
+    categoryName: String
 }
 
 input UpdateTransactionDTO {
@@ -34,5 +55,6 @@ input UpdateTransactionDTO {
     amount: Float,
     description: String,
     type: String
+    categoryName: String
 }
 

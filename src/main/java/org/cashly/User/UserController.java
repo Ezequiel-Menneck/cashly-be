@@ -1,6 +1,7 @@
 package org.cashly.User;
 
 import org.cashly.User.DTOs.CreateUserRequestDTO;
+import org.cashly.User.DTOs.UserDTO;
 import org.cashly.User.Transactions.DTOs.CreateTransactionDTO;
 import org.cashly.User.Transactions.DTOs.UpdateTransactionDTO;
 import org.cashly.User.Transactions.Transactions;
@@ -16,8 +17,8 @@ public class UserController {
 
     private final UserService userService;
 
-    public UserController(UserService userServiceGraphQL) {
-        this.userService = userServiceGraphQL;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @MutationMapping
@@ -26,7 +27,7 @@ public class UserController {
     }
 
     @QueryMapping
-    public User findUserByIdentifier(@Argument String identifier) {
+    public UserDTO findUserByIdentifier(@Argument String identifier) {
         return userService.getUserByIdentifier(identifier);
     }
 

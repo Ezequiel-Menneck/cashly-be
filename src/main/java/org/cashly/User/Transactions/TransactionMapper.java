@@ -8,6 +8,7 @@ import org.mapstruct.Mapping;
 public interface TransactionMapper {
 
     @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID().toString())")
-    Transactions toEntity(CreateTransactionDTO createTransactionDTO);
+    @Mapping(target = "categoryId", source = "categoryId")
+    Transactions toEntity(CreateTransactionDTO createTransactionDTO, String categoryId);
 
 }
