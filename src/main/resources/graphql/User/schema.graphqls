@@ -31,7 +31,11 @@ type TransactionsDTO {
     type: String!
     categoryId: String
     categoryName: String
+}
 
+type TransactionsCountByCategoryDTO {
+    categoryName: String!,
+    transactionCount: Int!
 }
 
 input CreateUserRequestDTO {

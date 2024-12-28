@@ -3,6 +3,7 @@ package org.cashly.User;
 import org.cashly.User.DTOs.CreateUserRequestDTO;
 import org.cashly.User.DTOs.UserDTO;
 import org.cashly.User.Transactions.DTOs.CreateTransactionDTO;
+import org.cashly.User.Transactions.DTOs.TransactionsCountByCategoryDTO;
 import org.cashly.User.Transactions.DTOs.UpdateTransactionDTO;
 import org.cashly.User.Transactions.Transactions;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -11,6 +12,7 @@ import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Controller
 public class UserController {
@@ -21,14 +23,19 @@ public class UserController {
         this.userService = userService;
     }
 
-    @MutationMapping
-    public User createUser(@Argument CreateUserRequestDTO createUserRequest) {
-        return userService.createUser(createUserRequest);
-    }
-
     @QueryMapping
     public UserDTO findUserByIdentifier(@Argument String identifier) {
         return userService.getUserByIdentifier(identifier);
+    }
+
+    @QueryMapping
+    public List<TransactionsCountByCategoryDTO> getTransactionsCountByCategory(@Argument String identifier) {
+        return userService.getCategoryCountByTransactions(identifier);
+    }
+
+    @MutationMapping
+    public User createUser(@Argument CreateUserRequestDTO createUserRequest) {
+        return userService.createUser(createUserRequest);
     }
 
     @MutationMapping

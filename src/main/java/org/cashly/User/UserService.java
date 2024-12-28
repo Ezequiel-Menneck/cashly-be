@@ -3,6 +3,7 @@ package org.cashly.User;
 import org.cashly.Category.Category;
 import org.cashly.Category.CategoryRepository;
 import org.cashly.Category.CategoryService;
+import org.cashly.User.Transactions.DTOs.TransactionsCountByCategoryDTO;
 import org.cashly.User.DTOs.CreateUserRequestDTO;
 import org.cashly.User.DTOs.UserDTO;
 import org.cashly.User.Exceptions.DuplicateUserException;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -66,7 +68,6 @@ public class UserService {
                 }).toList();
 
         return userMapper.toUserDTO(user, transactionsDTO);
-
     }
 
     public void deleteUserByIdentifier(String identifier) {
@@ -116,6 +117,16 @@ public class UserService {
                 .ifPresent(t -> updateTransactionFields(updateTransactionDTO, t, optionalCategory));
         userRepository.save(user);
         return true;
+    }
+
+
+    public List<TransactionsCountByCategoryDTO> getCategoryCountByTransactions(String identifier) {
+        return getUserByIdentifier(identifier).getTransactions().stream()
+                .collect(Collectors.groupingBy(TransactionsDTO::getCategoryName, Collectors.counting()))
+                .entrySet()
+                .stream()
+                .map(entry -> new TransactionsCountByCategoryDTO(entry.getKey(), entry.getValue().intValue()))
+                .toList();
     }
 
     private static void updateTransactionFields(UpdateTransactionDTO updateTransactionDTO, Transactions transaction, Optional<Category> optionalCategory) {
