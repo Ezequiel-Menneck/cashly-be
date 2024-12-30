@@ -4,6 +4,7 @@ import org.cashly.User.DTOs.CreateUserRequestDTO;
 import org.cashly.User.DTOs.UserDTO;
 import org.cashly.User.Transactions.DTOs.CreateTransactionDTO;
 import org.cashly.User.Transactions.DTOs.TransactionsCountByCategoryDTO;
+import org.cashly.User.Transactions.DTOs.TransactionsCountByDateDTO;
 import org.cashly.User.Transactions.DTOs.UpdateTransactionDTO;
 import org.cashly.User.Transactions.Transactions;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -30,7 +31,12 @@ public class UserController {
 
     @QueryMapping
     public List<TransactionsCountByCategoryDTO> getTransactionsCountByCategory(@Argument String identifier) {
-        return userService.getCategoryCountByTransactions(identifier);
+        return userService.getTransactionsCountByCategory(identifier);
+    }
+
+    @QueryMapping
+    public List<TransactionsCountByDateDTO> getTransactionsCountByDate(@Argument String identifier) {
+        return userService.getTransactionsCountByDate(identifier);
     }
 
     @MutationMapping

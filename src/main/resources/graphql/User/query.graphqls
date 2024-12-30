@@ -1,4 +1,5 @@
 type Query {
     findUserByIdentifier(identifier: String!): UserDTO
     getTransactionsCountByCategory(identifier: String!): [TransactionsCountByCategoryDTO]
+    getTransactionsCountByDate(identifier: String!): [TransactionsCountByDateDTO]
 }

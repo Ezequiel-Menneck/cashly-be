@@ -38,6 +38,11 @@ type TransactionsCountByCategoryDTO {
     transactionCount: Int!
 }
 
+type TransactionsCountByDateDTO {
+    transactionCount: Int!
+    date: String!
+}
+
 input CreateUserRequestDTO {
     username: String!,
     identifier: String!,

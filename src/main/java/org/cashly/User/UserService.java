@@ -3,23 +3,21 @@ package org.cashly.User;
 import org.cashly.Category.Category;
 import org.cashly.Category.CategoryRepository;
 import org.cashly.Category.CategoryService;
-import org.cashly.User.Transactions.DTOs.TransactionsCountByCategoryDTO;
+import org.cashly.User.Transactions.DTOs.*;
 import org.cashly.User.DTOs.CreateUserRequestDTO;
 import org.cashly.User.DTOs.UserDTO;
 import org.cashly.User.Exceptions.DuplicateUserException;
 import org.cashly.User.Exceptions.UserErrorCodeException;
 import org.cashly.User.Exceptions.UserNotFoundException;
-import org.cashly.User.Transactions.DTOs.CreateTransactionDTO;
-import org.cashly.User.Transactions.DTOs.TransactionsDTO;
-import org.cashly.User.Transactions.DTOs.UpdateTransactionDTO;
 import org.cashly.User.Transactions.TransactionMapper;
 import org.cashly.User.Transactions.Transactions;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -120,7 +118,7 @@ public class UserService {
     }
 
 
-    public List<TransactionsCountByCategoryDTO> getCategoryCountByTransactions(String identifier) {
+    public List<TransactionsCountByCategoryDTO> getTransactionsCountByCategory(String identifier) {
         return getUserByIdentifier(identifier).getTransactions().stream()
                 .collect(Collectors.groupingBy(TransactionsDTO::getCategoryName, Collectors.counting()))
                 .entrySet()
@@ -128,6 +126,28 @@ public class UserService {
                 .map(entry -> new TransactionsCountByCategoryDTO(entry.getKey(), entry.getValue().intValue()))
                 .toList();
     }
+
+    public List<TransactionsCountByDateDTO> getTransactionsCountByDate(String identifier) {
+        int year = LocalDate.now().getYear();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        Map<LocalDate, Long> grouped = getUserByIdentifier(identifier).getTransactions().stream()
+                .filter(tx -> {
+                    LocalDate transactionDate = LocalDate.parse(tx.getTransactionDate(), formatter);
+                    return transactionDate.getYear() == year;
+                })
+                .collect(Collectors.groupingBy(
+                        tx -> LocalDate.parse(tx.getTransactionDate(), formatter),
+                        Collectors.counting()
+                ));
+
+        return grouped.entrySet().stream()
+                .map(entry -> new TransactionsCountByDateDTO(entry.getKey().format(outputFormatter), entry.getValue()))
+                .sorted(Comparator.comparing(dto -> LocalDate.parse(dto.date(), outputFormatter)))
+                .collect(Collectors.toList());
+    }
+
 
     private static void updateTransactionFields(UpdateTransactionDTO updateTransactionDTO, Transactions transaction, Optional<Category> optionalCategory) {
         transaction.setAmount(updateTransactionDTO.amount() != null ? updateTransactionDTO.amount() : transaction.getAmount());
