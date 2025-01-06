@@ -68,6 +68,8 @@ public class UserService {
                     return dto;
                 }).toList();
 
+        transactionsDTO = transactionsDTO.stream().sorted(Comparator.comparing(TransactionsDTO::getTransactionDate).reversed()).toList();
+
         return userMapper.toUserDTO(user, transactionsDTO);
     }
 
