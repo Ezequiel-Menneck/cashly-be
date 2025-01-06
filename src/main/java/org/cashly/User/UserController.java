@@ -2,10 +2,7 @@ package org.cashly.User;
 
 import org.cashly.User.DTOs.CreateUserRequestDTO;
 import org.cashly.User.DTOs.UserDTO;
-import org.cashly.User.Transactions.DTOs.CreateTransactionDTO;
-import org.cashly.User.Transactions.DTOs.TransactionsCountByCategoryDTO;
-import org.cashly.User.Transactions.DTOs.TransactionsCountByDateDTO;
-import org.cashly.User.Transactions.DTOs.UpdateTransactionDTO;
+import org.cashly.User.Transactions.DTOs.*;
 import org.cashly.User.Transactions.Transactions;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -37,6 +34,11 @@ public class UserController {
     @QueryMapping
     public List<TransactionsCountByDateDTO> getTransactionsCountByDate(@Argument String identifier) {
         return userService.getTransactionsCountByDate(identifier);
+    }
+
+    @QueryMapping
+    public UserBaseSalaryAndSumOfTransactionsAmountDTO getUserBaseSalaryAndSumTransactionsAmount(@Argument String identifier, @Argument Integer month) {
+        return userService.getUserBaseSalaryAndSumTransactionsAmount(identifier, month);
     }
 
     @MutationMapping

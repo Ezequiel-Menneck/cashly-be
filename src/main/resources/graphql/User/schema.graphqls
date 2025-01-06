@@ -43,6 +43,11 @@ type TransactionsCountByDateDTO {
     date: String!
 }
 
+type UserBaseSalaryAndSumOfTransactionsAmountDTO {
+    baseSalary: Int!
+    transactionsAmountSum: Int!
+}
+
 input CreateUserRequestDTO {
     username: String!,
     identifier: String!,

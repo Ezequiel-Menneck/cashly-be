@@ -29,6 +29,9 @@ public class UserService {
     private final UserMapper userMapper;
     private final TransactionMapper transactionMapper;
 
+
+    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+
     public UserService(UserRepository userRepository, CategoryRepository categoryRepository, CategoryService categoryService, UserMapper userMapper, TransactionMapper transactionMapper) {
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
@@ -129,7 +132,6 @@ public class UserService {
 
     public List<TransactionsCountByDateDTO> getTransactionsCountByDate(String identifier) {
         int year = LocalDate.now().getYear();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         Map<LocalDate, Long> grouped = getUserByIdentifier(identifier).getTransactions().stream()
@@ -146,6 +148,16 @@ public class UserService {
                 .map(entry -> new TransactionsCountByDateDTO(entry.getKey().format(outputFormatter), entry.getValue()))
                 .sorted(Comparator.comparing(dto -> LocalDate.parse(dto.date(), outputFormatter)))
                 .collect(Collectors.toList());
+    }
+
+    public UserBaseSalaryAndSumOfTransactionsAmountDTO getUserBaseSalaryAndSumTransactionsAmount(String identifier, Integer month) {
+        UserDTO user = getUserByIdentifier(identifier);
+        BigDecimal totalAmount = user.getTransactions().stream().filter(tx -> {
+            LocalDate transactionDate = LocalDate.parse(tx.getTransactionDate(), formatter);
+            return transactionDate.getMonth().getValue() == month;
+        }).map(TransactionsDTO::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return new UserBaseSalaryAndSumOfTransactionsAmountDTO(user.getBaseSalary(), totalAmount);
     }
 
 

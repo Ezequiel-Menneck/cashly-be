@@ -2,4 +2,5 @@ type Query {
     findUserByIdentifier(identifier: String!): UserDTO
     getTransactionsCountByCategory(identifier: String!): [TransactionsCountByCategoryDTO]
     getTransactionsCountByDate(identifier: String!): [TransactionsCountByDateDTO]
+    getUserBaseSalaryAndSumTransactionsAmount(identifier: String!, month: Int!): UserBaseSalaryAndSumOfTransactionsAmountDTO
 }
