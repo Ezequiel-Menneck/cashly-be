@@ -167,7 +167,7 @@ public class UserService {
         transaction.setAmount(updateTransactionDTO.amount() != null ? updateTransactionDTO.amount() : transaction.getAmount());
         transaction.setDescription(updateTransactionDTO.description() != null ? updateTransactionDTO.description() : transaction.getDescription());
         transaction.setType(updateTransactionDTO.type() != null ? updateTransactionDTO.type() : transaction.getType());
-        transaction.setTransactionDate(updateTransactionDTO.transactionDate() != null ? updateTransactionDTO.transactionDate().toString() : transaction.getTransactionDate());
+        transaction.setTransactionDate(updateTransactionDTO.transactionDate() != null ? updateTransactionDTO.transactionDate() : transaction.getTransactionDate());
         optionalCategory.ifPresent(category -> transaction.setCategoryId(category.getId()));
     }
 

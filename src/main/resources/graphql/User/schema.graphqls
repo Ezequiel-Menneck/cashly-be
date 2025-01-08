@@ -67,6 +67,7 @@ input UpdateTransactionDTO {
     transactionId: String!
     identifier: String!,
     amount: Float,
+    transactionDate: String!
     description: String,
     type: String
     categoryName: String
