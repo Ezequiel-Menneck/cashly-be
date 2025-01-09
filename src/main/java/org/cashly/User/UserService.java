@@ -94,9 +94,8 @@ public class UserService {
     public Transactions createTransaction(CreateTransactionDTO createTransactionDTO) {
         User user = getUser(createTransactionDTO.identifier());
         Optional<Category> optionalCategory = categoryService.findByName(createTransactionDTO.categoryName());
-
-        // optionalCategory is always present
-        Transactions transactions = transactionMapper.toEntity(createTransactionDTO, optionalCategory.get().getId());
+        String categoryId = optionalCategory.map(Category::getId).orElse("");
+        Transactions transactions = transactionMapper.toEntity(createTransactionDTO, categoryId);
         user.getTransactions().add(transactions);
         userRepository.save(user);
         return transactions;
