@@ -1,7 +1,6 @@
 type User {
     id: String!,
     identifier: String!,
-    username: String!,
     baseSalary: Float,
     transactions: [Transactions]
 }
@@ -49,7 +48,6 @@ type UserBaseSalaryAndSumOfTransactionsAmountDTO {
 }
 
 input CreateUserRequestDTO {
-    username: String!,
     identifier: String!,
     baseSalary: Float!
 }

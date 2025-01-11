@@ -70,9 +70,4 @@ public class UserController {
     @MutationMapping Boolean updateTransaction(@Argument UpdateTransactionDTO updateTransactionDTO) {
         return userService.updateTransaction(updateTransactionDTO);
     }
-
-    @MutationMapping
-    public Boolean updateUsername(@Argument String identifier, @Argument String username) {
-        return userService.updateUsername(identifier, username);
-    }
 }

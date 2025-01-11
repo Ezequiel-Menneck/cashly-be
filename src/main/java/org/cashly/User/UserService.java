@@ -6,7 +6,6 @@ import org.cashly.Category.CategoryService;
 import org.cashly.User.Transactions.DTOs.*;
 import org.cashly.User.DTOs.CreateUserRequestDTO;
 import org.cashly.User.DTOs.UserDTO;
-import org.cashly.User.Exceptions.DuplicateUserException;
 import org.cashly.User.Exceptions.UserErrorCodeException;
 import org.cashly.User.Exceptions.UserNotFoundException;
 import org.cashly.User.Transactions.TransactionMapper;
@@ -41,10 +40,6 @@ public class UserService {
     }
 
     public User createUser(CreateUserRequestDTO createUserRequestDTO) {
-        Optional<User> optionalUser = userRepository.findByUsername(createUserRequestDTO.username());
-        if (optionalUser.isPresent()) {
-            throw new DuplicateUserException(createUserRequestDTO.username(), UserErrorCodeException.DUPLICATED_USER.name());
-        }
         User newUser = userMapper.toEntity(createUserRequestDTO);
         userRepository.insert(newUser);
         return newUser;
@@ -75,13 +70,6 @@ public class UserService {
 
     public void deleteUserByIdentifier(String identifier) {
         userRepository.deleteByIdentifier(identifier);
-    }
-
-    public Boolean updateUsername(String identifier, String username) {
-        User user = getUser(identifier);
-        user.setUsername(username);
-        userRepository.save(user);
-        return true;
     }
 
     public User updateUserBaseSalary(String identifier, BigDecimal baseSalary) {

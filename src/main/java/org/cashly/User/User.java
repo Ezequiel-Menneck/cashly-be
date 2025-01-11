@@ -17,8 +17,6 @@ public class User {
 
     private String identifier;
 
-    private String username;
-
     private BigDecimal baseSalary;
 
     private List<Transactions> transactions;
