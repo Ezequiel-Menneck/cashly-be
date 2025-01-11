@@ -29,7 +29,7 @@ public class UserService {
     private final TransactionMapper transactionMapper;
 
 
-    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
     public UserService(UserRepository userRepository, CategoryRepository categoryRepository, CategoryService categoryService, UserMapper userMapper, TransactionMapper transactionMapper) {
         this.userRepository = userRepository;
