@@ -40,10 +40,6 @@ dependencies {
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
-
 bootJar {
-    mainClass = 'org/cashly/CashlyApplication'
+    mainClass = 'java/org/cashly/CashlyApplication'
 }
