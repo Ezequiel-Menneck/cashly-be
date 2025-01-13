@@ -17,7 +17,6 @@ type Transactions {
 type UserDTO {
     id: String!,
     identifier: String!,
-    username: String!,
     baseSalary: Float,
     transactions: [TransactionsDTO]
 }
