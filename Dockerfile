@@ -14,6 +14,8 @@ COPY src ./src
 
 RUN ./gradlew bootJar
 
+RUN ls -l /app/build/libs/
+
 FROM openjdk:17-jdk-slim
 
 WORKDIR /app
