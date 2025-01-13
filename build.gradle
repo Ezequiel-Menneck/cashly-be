@@ -41,5 +41,5 @@ dependencies {
 }
 
 bootJar {
-    mainClass = 'java/org/cashly/CashlyApplication'
+    mainClass = 'org.cashly.CashlyApplication'
 }
