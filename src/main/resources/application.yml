@@ -7,6 +7,6 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb://casdly:cashly%40123@localhost:27017/
-      password: cashly@123
-      database: cashly
+      uri: ${DATABASE_URL}
+      password: ${DATABASE_PASSWORD}
+      database: ${DATABASE}
