@@ -45,5 +45,5 @@ tasks.named('test') {
 }
 
 bootJar {
-    mainClass = 'org/cashly/CashlyApplication.java'
+    mainClass = 'org/cashly/CashlyApplication'
 }
