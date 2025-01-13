@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jdk-alpine as builder
+FROM openjdk:17-jdk-slim AS builder
 
 WORKDIR /app
 
@@ -14,7 +14,7 @@ COPY src ./src
 
 RUN ./gradlew bootJar
 
-FROM eclipse-temurin:17-jdk-alpine
+FROM openjdk:17-jdk-slim
 
 WORKDIR /app
 
