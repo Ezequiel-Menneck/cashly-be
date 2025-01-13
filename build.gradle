@@ -40,20 +40,11 @@ dependencies {
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
 }
 
-springBoot {
-    mainClass = 'org.cashly.CashlyApplication'
+jar {
+    enabled = false
 }
 
 bootJar {
-    mainClass = 'org.cashly.CashlyApplication'
-    manifest {
-        attributes(
-                'Main-Class': 'org.springframework.boot.loader.JarLauncher',
-                'Start-Class': 'org.cashly.CashlyApplication',
-                'Spring-Boot-Version': '3.2.3',
-                'Spring-Boot-Classes': 'BOOT-INF/classes/',
-                'Spring-Boot-Lib': 'BOOT-INF/lib/',
-                'Spring-Boot-Classpath-Index': 'BOOT-INF/classpath.idx'
-        )
-    }
+    archiveFileName = 'app.jar'
+    mainClass.set('org.cashly.CashlyApplication')
 }
