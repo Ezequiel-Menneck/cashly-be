@@ -14,7 +14,7 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/graphql")
-                        .allowedOrigins("http://localhost:5173", "https://cashly-i13ykyajn-ezequielmennecks-projects.vercel.app")
+                        .allowedOrigins("http://localhost:5173", "https://cashly-i13ykyajn-ezequielmennecks-projects.vercel.app", "https://cashly-fe.vercel.app/")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
